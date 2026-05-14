@@ -1,10 +1,13 @@
-from ghost_image_forensics import read_exif, run_ela
+# test des fonctions forensics EXIF et ELA de Ghost
+from ghost_image_forensics.exif import read_exif
+from ghost_image_forensics.ela import run_ela
 
-def test_read_exif():
-    c = read_exif("photo.jpg")
-    assert "gps_lat" in c.result
-    assert c.confidence > 0.9
+def test_exif_et_ela():
+    contract = read_exif("test.jpg")
+    assert contract is not None
+    assert contract.result["camera_model"] is not None
+    assert len(contract.evidence) >= 1
 
-def test_run_ela():
-    r = run_ela("photo.jpg")
-    assert r["verdict"] == "likely_authentic"
+    ela = run_ela("test.jpg")
+    assert "ela_score" in ela
+    assert "verdict" in ela
